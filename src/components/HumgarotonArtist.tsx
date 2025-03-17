@@ -36,7 +36,7 @@ const ArtistList = () => {
 
       if (search) newFilters.search = search;
       if (letter) newFilters.letter = letter;
-      if (type as FetchArtistsParams["type"]) newFilters.type = type;
+      if (type && type !== "") newFilters.type = type as FetchArtistsParams["type"];
       if (includeImage) newFilters.include_image = includeImage;
       
     }
@@ -45,7 +45,7 @@ const ArtistList = () => {
     setPage(1);
   }
   useEffect(() => {
-    setFilters((prevFilters) => ({ ...prevFilters, page })); // Mindig frissítjük a page-t a filterekben is
+    setFilters((prevFilters) => ({ ...prevFilters, page }));
   }, [page]);
 
   useEffect(() => {
@@ -59,16 +59,23 @@ const ArtistList = () => {
           {
             pathname: router.pathname,
             query: { ...filters, page },
-          }, undefined,{ shallow: true });
-      } catch (error) {
-        console.error("Error fetching artists:", error);
-        setError(error);
+          },
+          undefined,
+          { shallow: true }
+        );
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error("Error fetching artists:", error);
+          setError(error);
+        } else {
+          console.error("Unknown error:", error);
+        }
       }
       setLoading(false);
     };
-  
+
     getArtists();
-  }, [filters, page, router]);
+  }, [filters, router]);
 
   function cleanHandler() {
     if (customForm.current) {

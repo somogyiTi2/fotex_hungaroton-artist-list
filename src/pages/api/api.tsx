@@ -1,6 +1,6 @@
 import { FetchArtistsParams } from "@/type/FetchArtistsParams";
 import axios from "axios";
-const API_URL: string = process.env.NEXT_PUBLIC_API_URL; 
+const API_URL: string = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 export const fetchArtists = async (params: FetchArtistsParams) => {
   try {
