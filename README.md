@@ -1,3 +1,6 @@
+## Megoldás: https://fotex-hungaroton-artist-list-oqe7.vercel.app
+
+
 ## Getting Started
 
 First, run the development server:
