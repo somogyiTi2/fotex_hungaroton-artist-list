@@ -13,7 +13,6 @@ const ArtistList = () => {
   const { query } = router;
   const [page, setPage] = useState<number>(1);
   const [filters, setFilters] = useState<FetchArtistsParams>({ ...query, page });
-  console.log(page,filters)
 
   const [artists, setArtists] = useState<ResponseArtists[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -88,7 +87,7 @@ const ArtistList = () => {
       query: { page: 1 }
     });
   }
-
+  
   return (
     <div className="margin-top-10">
       <Button id="phoneFilter" variant="contained" onClick={() => setShowFilter(!showFilter)}>
@@ -130,7 +129,7 @@ const ArtistList = () => {
             <MenuItem value="is_primary">Primary</MenuItem>
           </TextField>
 
-          <FormControlLabel
+          <FormControlLabel className="flex-center"
             label="Include Image"
             control={<Checkbox id="include_image" defaultChecked={query.include_image === "true"} />}
           />
@@ -142,7 +141,7 @@ const ArtistList = () => {
         </Box>
       }
       <div className="margin-top-15">
-        {error && <p>{error.message}</p>}
+        {error && <p className="flex-center">{error.message}</p>}
         {loading ? (
           <p>Loading...</p>
         ) : artists.length === 0 ? (

@@ -10,7 +10,6 @@ export const fetchArtists = async (params: FetchArtistsParams) => {
         per_page: 50, // Fix érték
       },
     });
-    console.log("Artists API Response:", response.data);
     return response.data; 
   } catch (error) {
     console.error("Error fetching artists:", error);
