@@ -1,5 +1,5 @@
 {
-  "name": "fotex_hungaroton-artist-list",
+  "name": "hungaroton-artist-list",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^6.4.7",
     "axios": "^1.8.3",
     "next": "^15.2.2",
     "react": "^19.0.0",

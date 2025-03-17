@@ -3,6 +3,11 @@ import { fetchArtists } from "@/pages/api/api";
 import { useRouter } from "next/router";
 import { FetchArtistsParams } from "@/type/FetchArtistsParams";
 import { ResponseArtists } from "@/type/ResponseArtists";
+import Table from "./Table";
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import { Box, Checkbox, FormControlLabel, MenuItem, TextField } from "@mui/material";
+
 
 const ArtistList = () => {
   const router = useRouter();
@@ -65,6 +70,7 @@ const ArtistList = () => {
       customForm.current.reset();
     }
     setFilters({ page: 1 });
+    setPage(1);
     router.push({
       pathname: router.pathname,
       query: { page: 1 },
@@ -73,37 +79,63 @@ const ArtistList = () => {
 
   return (
     <div>
-      <form onSubmit={handleSave} ref={customForm}>
-        <label>
-          Search
-          <input type="text" id="search" defaultValue={query.search ? query.search as string : ""} />
-        </label>
-        <label>
-          Letter
-          <input type="text" id="letter" maxLength={1} defaultValue={query.letter ? query.letter as string : ""} />
-        </label>
-        <label>
-          Type
-          <select id="type" defaultValue={query.type ? query.type as string : ""}>
-            <option value="">Select type</option>
-            <option value="is_composer">Composer</option>
-            <option value="is_performer">Performer</option>
-            <option value="is_primary">Primary</option>
-          </select>
-        </label>
-        <label>
-          Include Image
-          <input
-            type="checkbox"
-            name="include_image"
-            id="include_image"
-            defaultChecked={query.include_image === "true"}
-          />
-        </label>
-        <button>🔎 Filter</button>
-        <button onClick={cleanHandler}>🧽Clear</button>
-      </form>
+      <Box
+        component="form"
+        onSubmit={handleSave}
+        ref={customForm}
+        autoComplete="off"
+      >
+        <TextField
+          className="margin-top-10"
+          id="search"
+          label="Search"
+          variant="filled"
+          defaultValue={query.search || ""}
+          fullWidth
+        />
 
+        <TextField
+          className="margin-top-10"
+          id="letter"
+          label="Letter"
+          variant="filled"
+          inputProps={{ maxLength: 1 }}
+          defaultValue={query.letter || ""}
+          fullWidth
+        />
+
+        <TextField
+          className="margin-top-10"
+          id="type"
+          select
+          label="Type"
+          defaultValue={query.type || ""}
+          variant="filled"
+          fullWidth
+        >
+          <MenuItem value="">Select type</MenuItem>
+          <MenuItem value="is_composer">Composer</MenuItem>
+          <MenuItem value="is_performer">Performer</MenuItem>
+        </TextField>
+
+
+        <FormControlLabel
+          label="Include Image"
+          control={
+            <Checkbox
+              id="include_image"
+              defaultChecked={query.include_image === "true"}
+            />
+          }
+
+        />
+
+        <Stack spacing={2} direction="row" className="flex-center">
+          <Button type="submit" variant="contained">🔎 Filter</Button>
+          <Button variant="contained" onClick={cleanHandler}>🧽 Clear</Button>
+        </Stack>
+
+      </Box>
       {error && <p>{error.message}</p>}
 
       {loading ? (
@@ -111,25 +143,29 @@ const ArtistList = () => {
       ) : artists.length === 0 ? (
         <p>No artists found.</p>
       ) : (
-        artists.map((artist) => (
-          <div key={artist.id}>
-            {artist.portrait && (
-              <img src={artist.portrait} alt={artist.name} width={100} />
-            )}
-            <h3>{artist.name}</h3>
-            <p>Albumok száma: {artist.albumCount}</p>
-          </div>
-        ))
+        <Table artists={artists} key="0" />
       )}
 
 
-      <div>
-        {page > 1 && <button onClick={() => setPage((prev) => prev - 1)}>{page - 1}</button>}
-        {page}
-        {artists.length !== 0 &&
-          <button onClick={() => setPage((prev) => prev + 1)}>{page + 1}</button>
+      <Stack spacing={2} direction="row" className="flex-center">
+        {page > 1 && (
+          <Button
+            variant="outlined"
+            onClick={() => setPage((prev) => prev - 1)}
+          >
+            {page - 1}
+          </Button>
+        )}
+        <Button variant="contained">{page}</Button>
+        {artists.length === 0 && 
+          <Button
+            variant="outlined"
+            onClick={() => setPage((prev) => prev + 1)}
+          >
+            {page + 1}
+          </Button>
         }
-      </div>
+      </Stack>
     </div>
   );
 };
