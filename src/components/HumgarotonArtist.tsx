@@ -12,6 +12,7 @@ const ArtistList = () => {
 
   const [artists, setArtists] = useState<ResponseArtists[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  
   const customForm = useRef<HTMLFormElement>(null);
 
   function handleSave(event: React.FormEvent) {
@@ -84,6 +85,7 @@ const ArtistList = () => {
             <option value="">Select type</option>
             <option value="is_composer">Composer</option>
             <option value="is_performer">Performer</option>
+            <option value="is_primary">Primary</option>
           </select>
         </label>
         <label>
