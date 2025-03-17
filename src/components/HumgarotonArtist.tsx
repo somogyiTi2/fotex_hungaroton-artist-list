@@ -18,6 +18,7 @@ const ArtistList = () => {
   const [artists, setArtists] = useState<ResponseArtists[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<any>(null);
+  const [showFilter, setShowFilter] = useState<boolean>(true);
 
   const customForm = useRef<HTMLFormElement>(null);
 
@@ -78,94 +79,100 @@ const ArtistList = () => {
   }
 
   return (
-    <div>
-      <Box
-        component="form"
-        onSubmit={handleSave}
-        ref={customForm}
-        autoComplete="off"
-      >
-        <TextField
-          className="margin-top-10"
-          id="search"
-          label="Search"
-          variant="filled"
-          defaultValue={query.search || ""}
-          fullWidth
-        />
-
-        <TextField
-          className="margin-top-10"
-          id="letter"
-          label="Letter"
-          variant="filled"
-          inputProps={{ maxLength: 1 }}
-          defaultValue={query.letter || ""}
-          fullWidth
-        />
-
-        <TextField
-          className="margin-top-10"
-          id="type"
-          select
-          label="Type"
-          defaultValue={query.type || ""}
-          variant="filled"
-          fullWidth
+    <div className="margin-top-10">
+      <Button id="phoneFilter" variant="contained" onClick={() => setShowFilter(!showFilter)}>{showFilter ? <>⬆️Collapse Filters⬆️</> : <>⬇️Expand filters⬇️</>}</Button>
+      {showFilter === true &&
+        <Box
+          component="form"
+          onSubmit={handleSave}
+          ref={customForm}
+          autoComplete="off"
         >
-          <MenuItem value="">Select type</MenuItem>
-          <MenuItem value="is_composer">Composer</MenuItem>
-          <MenuItem value="is_performer">Performer</MenuItem>
-        </TextField>
+          <TextField
+            className="margin-top-10"
+            id="search"
+            label="Search"
+            variant="filled"
+            defaultValue={query.search || ""}
+            fullWidth
+          />
 
+          <TextField
+            className="margin-top-10"
+            id="letter"
+            label="Letter"
+            variant="filled"
+            inputProps={{ maxLength: 1 }}
+            defaultValue={query.letter || ""}
+            fullWidth
+          />
 
-        <FormControlLabel
-          label="Include Image"
-          control={
-            <Checkbox
-              id="include_image"
-              defaultChecked={query.include_image === "true"}
-            />
-          }
-
-        />
-
-        <Stack spacing={2} direction="row" className="flex-center">
-          <Button type="submit" variant="contained">🔎 Filter</Button>
-          <Button variant="contained" onClick={cleanHandler}>🧽 Clear</Button>
-        </Stack>
-
-      </Box>
-      {error && <p>{error.message}</p>}
-
-      {loading ? (
-        <p>Loading...</p>
-      ) : artists.length === 0 ? (
-        <p>No artists found.</p>
-      ) : (
-        <Table artists={artists} key="0" />
-      )}
-
-
-      <Stack spacing={2} direction="row" className="flex-center">
-        {page > 1 && (
-          <Button
-            variant="outlined"
-            onClick={() => setPage((prev) => prev - 1)}
+          <TextField
+            className="margin-top-10"
+            id="type"
+            select
+            label="Type"
+            defaultValue={query.type || ""}
+            variant="filled"
+            fullWidth
           >
-            {page - 1}
-          </Button>
+            <MenuItem value="">Select type</MenuItem>
+            <MenuItem value="is_composer">Composer</MenuItem>
+            <MenuItem value="is_performer">Performer</MenuItem>
+            <MenuItem value="is_primary">Primary</MenuItem>
+          </TextField>
+
+
+          <FormControlLabel
+            label="Include Image"
+            control={
+              <Checkbox
+                id="include_image"
+                defaultChecked={query.include_image === "true"}
+              />
+            }
+
+          />
+
+          <Stack spacing={2} direction="row" className="flex-center">
+            <Button type="submit" variant="contained">🔎 Filter</Button>
+            <Button variant="contained" onClick={cleanHandler}>🧽 Clear</Button>
+          </Stack>
+
+        </Box>
+      }
+      <div className="margin-top-15">
+        {error && <p>{error.message}</p>}
+
+        {loading ? (
+          <p>Loading...</p>
+        ) : artists.length === 0 ? (
+          <p>No artists found.</p>
+        ) : (
+          <Table artists={artists} key="0" />
         )}
-        <Button variant="contained">{page}</Button>
-        {artists.length === 0 && 
-          <Button
-            variant="outlined"
-            onClick={() => setPage((prev) => prev + 1)}
-          >
-            {page + 1}
-          </Button>
-        }
-      </Stack>
+
+
+        <Stack spacing={2} direction="row" className="flex-center margin-top-15">
+          {page > 1 && (
+            <Button
+              variant="outlined"
+              onClick={() => setPage((prev) => prev - 1)}
+            >
+              {page - 1}
+            </Button>
+          )}
+          <Button variant="contained">{page}</Button>
+          {artists.length !== 0 &&
+            <Button
+              variant="outlined"
+              onClick={() => setPage((prev) => prev + 1)}
+            >
+              {page + 1}
+            </Button>
+          }
+        </Stack>
+      </div>
     </div>
   );
 };
