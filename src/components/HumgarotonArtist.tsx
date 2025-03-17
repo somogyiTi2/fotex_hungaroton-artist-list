@@ -56,6 +56,17 @@ const ArtistList = () => {
     getArtists();
   }, [filters]);
 
+  function cleanHandler() {
+    if (customForm.current) {
+      customForm.current.reset(); 
+    }
+    setFilters({ page: 1 });
+    router.push({
+      pathname: router.pathname,
+      query: { page: 1 }, 
+    });
+  }
+
   return (
     <div>
       <form onSubmit={handleSave} ref={customForm}>
@@ -85,6 +96,7 @@ const ArtistList = () => {
           />
         </label>
         <button>🔎 Filter</button>
+        <button onClick={cleanHandler}>🧽Clear</button>
       </form>
 
       {loading ? <p>Loading...</p> : artists.map((artist) => (
