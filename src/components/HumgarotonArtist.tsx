@@ -17,7 +17,7 @@ const ArtistList = () => {
 
   const [artists, setArtists] = useState<ResponseArtists[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<any>(null);
+  const [error, setError] = useState< Error |null |undefined>(null);
   const [showFilter, setShowFilter] = useState<boolean>(true);
 
   const customForm = useRef<HTMLFormElement>(null);
@@ -68,7 +68,7 @@ const ArtistList = () => {
     };
   
     getArtists();
-  }, [filters]);
+  }, [filters, page, router]);
 
   function cleanHandler() {
     if (customForm.current) {
