@@ -12,13 +12,14 @@ const ArtistList = () => {
 
   const [artists, setArtists] = useState<ResponseArtists[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  
+  const [error, setError] = useState<any>(null);
+
   const customForm = useRef<HTMLFormElement>(null);
 
   function handleSave(event: React.FormEvent) {
     event.preventDefault();
     const form = customForm.current;
-    const newFilters: FetchArtistsParams = { page: 1 }; 
+    const newFilters: FetchArtistsParams = { page: 1 };
 
     if (form) {
 
@@ -34,7 +35,7 @@ const ArtistList = () => {
     }
 
     setFilters(newFilters);
-    setPage(1); 
+    setPage(1);
   }
 
 
@@ -47,9 +48,11 @@ const ArtistList = () => {
         router.push({
           pathname: router.pathname,
           query: { ...filters, page },
-        }, undefined, { shallow: true });   
+        }, undefined, { shallow: true });
+        setError("")
       } catch (error) {
         console.error("Error fetching artists:", error);
+        setError(error)
       }
       setLoading(false);
     };
@@ -59,12 +62,12 @@ const ArtistList = () => {
 
   function cleanHandler() {
     if (customForm.current) {
-      customForm.current.reset(); 
+      customForm.current.reset();
     }
     setFilters({ page: 1 });
     router.push({
       pathname: router.pathname,
-      query: { page: 1 }, 
+      query: { page: 1 },
     });
   }
 
@@ -101,20 +104,31 @@ const ArtistList = () => {
         <button onClick={cleanHandler}>🧽Clear</button>
       </form>
 
-      {loading ? <p>Loading...</p> : artists.map((artist) => (
-        <div key={artist?.id}>
-          {artist.portrait &&
-            <img src={artist.portrait} alt={artist.name} width={100} />
-          }
-          <h3>{artist.name}</h3>
-          <p>Albumok száma: {artist.albumCount}</p>
-        </div>
-      ))}
+      {error && <p>{error.message}</p>}
+
+      {loading ? (
+        <p>Loading...</p>
+      ) : artists.length === 0 ? (
+        <p>No artists found.</p>
+      ) : (
+        artists.map((artist) => (
+          <div key={artist.id}>
+            {artist.portrait && (
+              <img src={artist.portrait} alt={artist.name} width={100} />
+            )}
+            <h3>{artist.name}</h3>
+            <p>Albumok száma: {artist.albumCount}</p>
+          </div>
+        ))
+      )}
+
 
       <div>
         {page > 1 && <button onClick={() => setPage((prev) => prev - 1)}>{page - 1}</button>}
         {page}
-        <button onClick={() => setPage((prev) => prev + 1)}>{page + 1}</button>
+        {artists.length !== 0 &&
+          <button onClick={() => setPage((prev) => prev + 1)}>{page + 1}</button>
+        }
       </div>
     </div>
   );
