@@ -12,7 +12,7 @@ import { Avatar } from '@mui/material';
 const ArtistTable: React.FC<{artists: ResponseArtists[];}> = ({ artists }) => {
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="artists table">
+      <Table aria-label="artists table">
         <TableHead>
           <TableRow>
             <TableCell>Portrait</TableCell>
